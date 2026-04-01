@@ -1,0 +1,28 @@
+# Python Virtual Environments
+venv/
+env/
+.env
+
+# Python Caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Mac OS System Files
+.DS_Store
+
+# Large Files & Local Databases (GitHub has a strict 100MB file limit)
+backend/UCSDped1/
+backend/*.h5
+backend/*.mp4
+backend/*.tif
+backend/anomaly_logs.db
+backend/snapshots/
+
+# Server and Build Logs
+*.log
+
+# Frontend (Node.js) Dependencies
+frontend/node_modules/
+frontend/dist/
+frontend/build/

@@ -1,0 +1,8 @@
+fastapi==0.110.0
+uvicorn==0.29.0
+sqlalchemy==2.0.29
+opencv-python==4.9.0.80
+tensorflow-macos==2.15.0 # Specific to MacOS usually, or just tensorflow for universal. Let's start with tensorflow. We'll use universal tensorflow.
+pydantic==2.6.4
+python-multipart==0.0.9 # For streaming MJPEG
+numpy==1.26.4
