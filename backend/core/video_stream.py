@@ -98,7 +98,13 @@ class VideoStreamer:
                     anomaly_score = 0.01
                 
                 # FINAL CHECK before logging anything
-                if anomaly_score >= 0.1 and self.running:
+                if anomaly_score >= 0.08 and self.running:
+                    # Draw a VERY thick full-frame alert border (Red)
+                    red_color = (0, 0, 255)
+                    thickness = 8
+                    cv2.rectangle(frame, (5, 5), (frame.shape[1]-5, frame.shape[0]-5), red_color, thickness)
+                    
+                    # Take snapshot WITH full-frame alert
                     current_time = time.time()
                     if current_time - self.last_snapshot_time > 0.1:
                         snapshot_filename = f"snapshots/incident_{int(current_time*1000)}.jpg"
@@ -110,11 +116,9 @@ class VideoStreamer:
                             print(f"[THREAD] Anomaly logged: {anomaly_score:.3f}")
                             self.on_anomaly_callback(float(anomaly_score), frame_ref_path)
                 
-            color = (0, 255, 0) if anomaly_score < 0.1 else (0, 0, 255)
+            color = (0, 255, 0) if anomaly_score < 0.08 else (0, 0, 255)
             text = f"Score: {anomaly_score:.3f}"
             cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-            if anomaly_score >= 0.1:
-                 cv2.rectangle(frame, (5, 5), (frame.shape[1]-5, frame.shape[0]-5), color, 4)
             
             ret, buffer = cv2.imencode('.jpg', frame)
             if ret:

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShieldCheck, Activity, Zap, Search, Image as ImageIcon, ArrowRight, Brain, Eye, Lock, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Activity, Zap, Search, Image as ImageIcon, ArrowRight, Brain, Eye, Lock, ChevronRight, Github } from 'lucide-react';
 
 /* ── Animated counter hook ────────────────────────────────────────── */
 function useCounter(target, duration = 1800) {
@@ -126,11 +126,11 @@ export default function WelcomeScreen({ onStart }) {
             </button>
             <a
               className="ws-btn-ghost"
-              href="https://github.com"
+              href="https://github.com/KeshavAkula/Crowd_Anomaly_Detection"
               target="_blank"
               rel="noreferrer"
             >
-              View Source
+              <Github size={17} /> View Source
             </a>
           </div>
         </section>

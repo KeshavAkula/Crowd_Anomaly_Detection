@@ -17,7 +17,7 @@ app = FastAPI(
 # Allow React frontend to access the API when running locally
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # For development, allow all
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { ShieldCheck, Activity, CloudUpload, Trash2, Pause, Play, Square, Video } from 'lucide-react';
+import { ShieldCheck, Activity, CloudUpload, Trash2, Pause, Play, Square, Video, Github } from 'lucide-react';
 import axios from 'axios';
 import VideoPlayer from './components/VideoPlayer.jsx';
 import LogsTable from './components/LogsTable.jsx';
@@ -19,6 +19,7 @@ function App() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [currentStreamUrl, setCurrentStreamUrl] = useState(`${STREAM_URL}?t=${Date.now()}`);
   const [chartData, setChartData] = useState(new Array(60).fill({ score: 0 }));
+  const [activeWindow, setActiveWindow] = useState('VIDEO');
 
   const fileInputRef = useRef(null);
   const alertTimerRef = useRef(null);
@@ -132,6 +133,13 @@ function App() {
           </h1>
           <div className="controls-group">
             <button 
+              className="control-btn"
+              onClick={() => window.open("https://github.com/KeshavAkula/Crowd_Anomaly_Detection", "_blank")}
+              title="View Source on GitHub"
+            >
+              <Github size={16} /> Source
+            </button>
+            <button 
               className={`control-btn ${activeMode === 'IP_CAMERA' ? 'active' : ''}`}
               onClick={handleIPCameraConnection}
             >
@@ -184,14 +192,37 @@ function App() {
         </div>
       </header>
 
-      <main className="grid-layout">
-        {/* Left Column: Video */}
-        <section className="glass-panel fade-in">
+      <div className="tabs-container fade-in" style={{ display: 'flex', gap: '1rem', padding: '0 2rem', marginBottom: '0.5rem' }}>
+         <button 
+            className={`control-btn ${activeWindow === 'VIDEO' ? 'active' : ''}`} 
+            style={{ flex: 1, padding: '1rem', justifyContent: 'center', fontSize: '1.1rem', fontWeight: activeWindow === 'VIDEO' ? 'bold' : 'normal' }}
+            onClick={() => setActiveWindow('VIDEO')}
+         >
+            <Activity size={20} style={{ marginRight: '8px' }} /> Video Analysis
+         </button>
+         <button 
+            className={`control-btn ${activeWindow === 'LOGS' ? 'active' : ''}`} 
+            style={{ flex: 1, padding: '1rem', justifyContent: 'center', fontSize: '1.1rem', fontWeight: activeWindow === 'LOGS' ? 'bold' : 'normal' }}
+            onClick={() => setActiveWindow('LOGS')}
+         >
+            <Activity size={20} style={{ marginRight: '8px' }} /> Incident Logs
+         </button>
+         <button 
+            className={`control-btn ${activeWindow === 'ANALYTICS' ? 'active' : ''}`} 
+            style={{ flex: 1, padding: '1rem', justifyContent: 'center', fontSize: '1.1rem', fontWeight: activeWindow === 'ANALYTICS' ? 'bold' : 'normal' }}
+            onClick={() => setActiveWindow('ANALYTICS')}
+         >
+            <Activity size={20} style={{ marginRight: '8px' }} /> Real-Time Analytics
+         </button>
+      </div>
+
+      <main className="single-window-layout" style={{ padding: '0 2rem 2rem 2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <section className="glass-panel fade-in" style={{ flex: 1, display: activeWindow === 'VIDEO' ? 'flex' : 'none', flexDirection: 'column' }}>
           <div className="panel-header">
             <Activity size={18} color="#8b949e" />
             <h2>Video Analysis <span style={{opacity: 0.5, fontSize: "0.8em"}}>({activeMode})</span></h2>
           </div>
-          <section className="video-section">
+          <section className="video-section" style={{ flex: 1, minHeight: '500px' }}>
             <VideoPlayer 
               streamUrl={currentStreamUrl} 
               isStreaming={isStreaming} 
@@ -199,30 +230,28 @@ function App() {
           </section>
         </section>
 
-        {/* Right Column: Logs */}
-        <section className="glass-panel fade-in" style={{ animationDelay: "0.1s" }}>
+        <section className="glass-panel fade-in" style={{ flex: 1, display: activeWindow === 'LOGS' ? 'flex' : 'none', flexDirection: 'column' }}>
           <div className="panel-header" style={{ justifyContent: 'space-between' }}>
             <h2>Incident Logs</h2>
             <button onClick={handleClearLogs} className="icon-btn" title="Clear All Logs">
               <Trash2 size={16} color="var(--text-secondary)" />
             </button>
           </div>
-          <div className="panel-content p-0">
+          <div className="panel-content p-0" style={{ flex: 1 }}>
              <LogsTable apiBaseUrl={API_BASE_URL} onUpdateTelemetry={handleUpdateTelemetry} />
           </div>
         </section>
-      </main>
 
-      {/* Analytics Row */}
-      <section className="glass-panel fade-in analytics-section" style={{ marginTop: '1.5rem', animationDelay: "0.2s" }}>
-        <div className="panel-header">
-          <Activity size={18} color="#3b82f6" />
-          <h2>Real-Time Anomaly Analytics <span style={{opacity: 0.5, fontSize: "0.8em"}}>(60-point sliding window)</span></h2>
-        </div>
-        <div className="panel-content">
-          <AnalyticsChart data={chartData} />
-        </div>
-      </section>
+        <section className="glass-panel fade-in analytics-section" style={{ flex: 1, display: activeWindow === 'ANALYTICS' ? 'flex' : 'none', flexDirection: 'column' }}>
+          <div className="panel-header">
+            <Activity size={18} color="#3b82f6" />
+            <h2>Real-Time Anomaly Analytics <span style={{opacity: 0.5, fontSize: "0.8em"}}>(60-point sliding window)</span></h2>
+          </div>
+          <div className="panel-content" style={{ flex: 1, minHeight: '400px' }}>
+            <AnalyticsChart data={chartData} />
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
